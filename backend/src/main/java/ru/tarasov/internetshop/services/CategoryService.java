@@ -29,4 +29,8 @@ public class CategoryService {
     public List<Category> findAll(){
         return categoryRepository.findAll();
     }
+
+    public List<Category> findAllBySubCategoriesIsNotEmpty() {
+        return categoryRepository.findAllBySubCategoriesIsNotEmpty();
+    }
 }

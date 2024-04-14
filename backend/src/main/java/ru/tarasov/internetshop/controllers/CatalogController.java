@@ -26,7 +26,7 @@ public class CatalogController {
     @Operation(summary = "Весь каталог", tags = {"list"})
     @GetMapping("/catalog")
     public List<Category> catalogPage(){
-        return categoryService.findAll();
+        return categoryService.findAllBySubCategoriesIsNotEmpty();
     }
 
     @Operation(summary = "Все продукты в категории", tags = {"find"})

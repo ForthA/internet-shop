@@ -21,4 +21,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
         where father_id = (select id from category where title = ?1);
         """, nativeQuery = true)
     List<Category> findSubCategoriesByTitle(String title);
+
+    List<Category> findAllBySubCategoriesIsNotEmpty();
 }
