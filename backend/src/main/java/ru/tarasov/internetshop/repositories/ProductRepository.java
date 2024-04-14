@@ -13,8 +13,17 @@ public interface ProductRepository  extends JpaRepository<Product, Integer> {
     Product findProductById(int id);
 
     @Query(value = """
-    select * from product
-    where category_id = ?1
+    select * from product p
+    where p.category_id in (with RECURSIVE query as (
+        select id, father_id, title from category
+        where id = ?1
+        UNION all
+    
+        select c.id, c.father_id, c.title from category as c
+                                                   inner join query on query.id = c.father_id
+    )
+    
+                            select id from query)
 """, nativeQuery = true)
     List<Product> findProductsByCategoryId(int id);
 }
