@@ -51,12 +51,12 @@ public class AuthController {
         String token = jwtUtil.generateToken(personDTO.getName());
         return Map.of("jwt-token", token);
     }
-
+    @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")
     public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
         try {
             UserDetails details = personDetailsService.loadUserByUsername(authenticationDTO.getUsername());
-            if (passwordEncoder.matches(authenticationDTO.getPassword(), details.getPassword())){
+            if (!passwordEncoder.matches(authenticationDTO.getPassword(), details.getPassword())){
                 return Map.of("message", "Неправильный пароль");
             }
             String token = jwtUtil.generateToken(authenticationDTO.getUsername());
