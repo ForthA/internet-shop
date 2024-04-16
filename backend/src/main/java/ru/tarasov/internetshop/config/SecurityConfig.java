@@ -31,6 +31,13 @@ public class SecurityConfig {
     private final PersonDetailsService personDetailsService;
     private final JWTFilter jwtFilter;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api/v1/**"
+    };
+
     @Autowired
     public SecurityConfig(PersonDetailsService personDetailsService, JWTFilter jwtFilter) {
         this.personDetailsService = personDetailsService;
@@ -48,6 +55,7 @@ public class SecurityConfig {
                     .requestMatchers("/login").permitAll()
                     .requestMatchers("/registration").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
+                    .requestMatchers(AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated();
 
         });
