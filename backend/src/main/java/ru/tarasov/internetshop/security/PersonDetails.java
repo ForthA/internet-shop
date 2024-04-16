@@ -2,10 +2,13 @@ package ru.tarasov.internetshop.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.tarasov.internetshop.models.Person;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class PersonDetails implements UserDetails {
     private final Person person;
@@ -16,7 +19,12 @@ public class PersonDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> roles = new ArrayList<>();
+
+        person.getRoles().forEach(role -> {
+            roles.add(new SimpleGrantedAuthority(" "));
+        });
+        return roles;
     }
 
     @Override

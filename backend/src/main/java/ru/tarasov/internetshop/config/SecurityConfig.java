@@ -3,14 +3,17 @@ package ru.tarasov.internetshop.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +25,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import ru.tarasov.internetshop.services.PersonDetailsService;
 
 @Configuration
-@EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
@@ -37,10 +39,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http
-                .cors().and()
-                .csrf().disable()
-                .build();
+        http.csrf().disable();
+        http.cors().disable();
+        http.httpBasic().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeHttpRequests((authz) -> {
+            authz
+                    .requestMatchers("/login").permitAll()
+                    .requestMatchers("/registration").permitAll()
+                    .requestMatchers("/catalog/**").permitAll()
+                    .anyRequest().authenticated();
+
+        });
+        return http.build();
     }
 
 
@@ -57,5 +68,10 @@ public class SecurityConfig {
                 .roles("USER")
                 .build());
         return manager;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
