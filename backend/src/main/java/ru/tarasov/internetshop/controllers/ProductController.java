@@ -30,8 +30,8 @@ public class ProductController {
 
     @Operation(summary = "Все продукты", tags = {"list"})
     @GetMapping("/list")
-    public List<Product> listPage(){
-        return productService.findAll();
+    public ResponseEntity<List<Product>> listPage(){
+        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
     @Operation(summary = "Получить конкретный продукт", tags = {"find"})

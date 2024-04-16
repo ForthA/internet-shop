@@ -3,6 +3,9 @@ package ru.tarasov.internetshop.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,26 +46,26 @@ public class AuthController {
 
     @Operation(summary = "Регистрация пользователя", tags = {"add"})
     @PostMapping("/registration")
-    public Map<String, String> registration(@RequestBody PersonDTO personDTO, BindingResult bindingResult){
+    public ResponseEntity<String> registration(@RequestBody PersonDTO personDTO, BindingResult bindingResult){
         if (bindingResult.hasErrors())
-            return Map.of("message", "oshibka!");
+            return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.NOT_FOUND);
 
         registrationService.register(converToPerson(personDTO));
         String token = jwtUtil.generateToken(personDTO.getName());
-        return Map.of("jwt-token", token);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
     @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
+    public ResponseEntity<String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
         try {
             UserDetails details = personDetailsService.loadUserByUsername(authenticationDTO.getUsername());
             if (!passwordEncoder.matches(authenticationDTO.getPassword(), details.getPassword())){
-                return Map.of("message", "Неправильный пароль");
+                return new ResponseEntity<>("Неверный пароль", HttpStatus.UNAUTHORIZED);
             }
             String token = jwtUtil.generateToken(authenticationDTO.getUsername());
-            return Map.of("jwt-token", token);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         } catch (UsernameNotFoundException e){
-            return Map.of("message", "Нет пользователя с таким именем");
+            return new ResponseEntity<>("Нет пользователя с таким именем", HttpStatus.NOT_FOUND);
         }
     }
 

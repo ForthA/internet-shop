@@ -23,8 +23,9 @@ public class CartController {
 
     @Operation(summary = "Все товары в корзине", tags = {"list"})
     @GetMapping("/list")
-    public List<Cart> cartPage(){
-        return cartService.findAll();
+    public ResponseEntity<List<Cart>> cartPage(){
+
+        return new ResponseEntity<>(cartService.findAll(), HttpStatus.OK);
     }
 
     @Operation(summary = "Добавить товар к корзине", tags = {"add"})
@@ -43,7 +44,7 @@ public class CartController {
     public ResponseEntity<HttpStatus> deleteCart(@PathVariable int id){
         try {
             cartService.deleteCart(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
