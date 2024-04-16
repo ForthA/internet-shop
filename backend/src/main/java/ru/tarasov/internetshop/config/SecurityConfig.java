@@ -55,6 +55,7 @@ public class SecurityConfig {
                     .requestMatchers("/login").permitAll()
                     .requestMatchers("/registration").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
+                    .requestMatchers("/product/**").permitAll()
                     .requestMatchers(AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated();
 
