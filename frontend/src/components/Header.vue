@@ -3,6 +3,7 @@ import userLogo from "@/assets/user.svg";
 import cartSvg from "@/assets/cart.svg"
 import { ref } from 'vue'
 import Popup from "./Popup.vue";
+import CatalogList from "./CatalogList.vue";
 
 const isShowPopup = ref(false);
 
@@ -24,6 +25,7 @@ const closePopup = () => {
         <div @click="showPopup" class="headerCatalog">Каталог</div>
 
           <Popup :show="isShowPopup" @closePopup="closePopup">
+            <CatalogList/>
           </Popup>
 
         <div class="headerRightWrap">

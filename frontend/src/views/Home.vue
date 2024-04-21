@@ -3,23 +3,31 @@
 import Header from '@/components/Header.vue';
 import { postService } from '@/service/productService';
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, provide } from 'vue';
 
-const catalog = ref([]);
-// const isLoading = ref(true);
-// const error = ref(null);
+const catalogList = ref([]);
+const isLoading = ref(true);
+const error = ref(null);
 
 async function fetchCatalog() {
   try {
-    const resp = await fetch('http://localhost:7070/catalog');
-    const data = await resp.json();
-    catalog.value = data;
+    const { data } = await postService.getCatalog();
+    catalogList.value = data;
     console.log(data);
   }
   catch (e) {
-    console.log(e);
+    error.value = e;
+  }
+  finally{
+    isLoading.value = false;
   }
 }
+
+provide('catalog', {
+  catalogList,
+  isLoading,
+  error
+})
 
 
 onMounted(fetchCatalog)

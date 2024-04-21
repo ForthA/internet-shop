@@ -53,6 +53,12 @@ const emit = defineEmits(['closePopup']);
   top: 0.3vw;
   right: 0.3vw;
   width: 2vw;
+  height: 2vw;
+}
+
+.popup-close img{
+  width: 2vw;
+  height: 2vw;
 }
 
 .popup-enter-from {
