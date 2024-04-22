@@ -30,7 +30,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public List<Category> findAllBySubCategoriesIsNotEmpty() {
-        return categoryRepository.findAllBySubCategoriesIsNotEmpty();
+    public List<Category> findAllBySubCategoriesIsNotEmptyAndFatherCategoryIsNull() {
+        return categoryRepository.findAllBySubCategoriesIsNotEmptyAndFatherCategoryIsNull();
     }
 }

@@ -1,5 +1,6 @@
 package ru.tarasov.internetshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,11 @@ public class Category {
 
     @Column(name="title")
     private String title;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "father_id", referencedColumnName = "id")
+    private Category fatherCategory;
 
     @OneToMany
     @JoinColumn(name = "father_id")

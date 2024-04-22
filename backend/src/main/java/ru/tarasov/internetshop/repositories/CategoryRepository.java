@@ -22,5 +22,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
         """, nativeQuery = true)
     List<Category> findSubCategoriesByTitle(String title);
 
-    List<Category> findAllBySubCategoriesIsNotEmpty();
+    List<Category> findAllBySubCategoriesIsNotEmptyAndFatherCategoryIsNull();
 }

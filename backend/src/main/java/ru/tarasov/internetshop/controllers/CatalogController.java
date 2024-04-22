@@ -28,7 +28,7 @@ public class CatalogController {
     @Operation(summary = "Весь каталог", tags = {"list"})
     @GetMapping("/catalog")
     public ResponseEntity<List<Category>> catalogPage(){
-        return new ResponseEntity<>(categoryService.findAllBySubCategoriesIsNotEmpty(), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.findAllBySubCategoriesIsNotEmptyAndFatherCategoryIsNull(), HttpStatus.OK);
     }
 
     @Operation(summary = "Все продукты в категории", tags = {"find"})
