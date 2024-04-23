@@ -51,7 +51,6 @@ public class AuthController {
             return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.NOT_FOUND);
 
         try {
-            System.out.println(personDTO.getName() + " " + personDTO.getSurname() + " " + personDTO.getEmail() + " " + personDTO.getPassword());
             registrationService.register(converToPerson(personDTO));
             String token = jwtUtil.generateToken(personDTO.getName());
             return new ResponseEntity<>(token, HttpStatus.OK);
