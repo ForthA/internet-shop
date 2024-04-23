@@ -50,9 +50,14 @@ public class AuthController {
         if (bindingResult.hasErrors())
             return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.NOT_FOUND);
 
-        registrationService.register(converToPerson(personDTO));
-        String token = jwtUtil.generateToken(personDTO.getName());
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        try {
+            System.out.println(personDTO.getName() + " " + personDTO.getSurname() + " " + personDTO.getEmail() + " " + personDTO.getPassword());
+            registrationService.register(converToPerson(personDTO));
+            String token = jwtUtil.generateToken(personDTO.getName());
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.BAD_REQUEST);
+        }
     }
     @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")

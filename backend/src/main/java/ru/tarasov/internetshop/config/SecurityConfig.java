@@ -22,10 +22,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import ru.tarasov.internetshop.services.PersonDetailsService;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final PersonDetailsService personDetailsService;
@@ -35,7 +43,8 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/**"
     };
 
     @Autowired
@@ -46,11 +55,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        http.headers().frameOptions().disable();
+
+        http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests((authz) -> {
             authz
-                    .requestMatchers("/login").permitAll()
-                    .requestMatchers("/registration").permitAll()
+                    .requestMatchers("/login/**").permitAll()
+                    .requestMatchers("/registration/**").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
                     .requestMatchers("/product/**").permitAll()
                     .requestMatchers(AUTH_WHITELIST).permitAll()
@@ -60,7 +72,23 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+        /*
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("*"));
 
+
+         */
+        config.setAllowedOrigins(List.of("http://localhost:7070", "http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
