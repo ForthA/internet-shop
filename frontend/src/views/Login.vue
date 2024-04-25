@@ -1,8 +1,28 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/store/AuthStore';
 
 const login = ref('');
 const password = ref('');
+
+const auth = useAuth();
+
+const router = useRouter()
+
+
+const handleSubmit = async () => {
+  try {
+    await auth.login({ username: login.value, password: password.value });
+    if (auth.errorLogin.length === 0) {
+      router.push({ path: '/' });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 
 </script>
 
@@ -10,9 +30,9 @@ const password = ref('');
   <div class="loginForm">
     <div class="loginBody">
       <p class="loginTitle">Вход в аккаунт</p>
-      <input class="loginInput" type="text" placeholder="Логин" required v-model="login">
-      <input class="loginInput" type="password" placeholder="Пароль" required v-model="password">
-      <button class="loginBtn">Войти</button>
+      <input class="loginInput" type="text" placeholder="Логин" v-model.trim="login">
+      <input class="loginInput" type="password" placeholder="Пароль" v-model.trim="password">
+      <button class="loginBtn" @click="handleSubmit">Войти</button>
       <p class="loginToReg">
         Нет аккаунта?
         <router-link to="/регистрация">
@@ -87,7 +107,7 @@ const password = ref('');
   color: blue;
 }
 
-.linkToHome{
+.linkToHome {
   position: absolute;
   bottom: 2vw;
   left: 2vw;

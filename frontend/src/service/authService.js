@@ -1,23 +1,24 @@
+import { jwtDecode } from 'jwt-decode';
 import $api from './api'
 
 export class authService {
   static async registration(name, surname, email, password) {
-    const {data} =  $api.post(`/registration`, {
+    const {data} = await $api.post(`/registration`, {
         name,
         surname,
         email,
         password
     });
-
-    return data
+    localStorage.setItem('token', data)
+    return jwtDecode(data)
   }
 
   static async login(username, password) {
-    return $api.post(`/login`, {
-      params: {
+    const {data} =  await $api.post(`/login`, {
         username,
         password
-      }
     });
+    localStorage.setItem('token', data)
+    return jwtDecode(data)
   }
 }

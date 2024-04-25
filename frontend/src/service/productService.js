@@ -1,7 +1,11 @@
 import $api from './api'
 
-export class postService {
+export class productService {
   static async getCatalog() {
-    return $api.get(`/catalog`);
+    return await $api.get(`/catalog`);
+  }
+
+  static async getProduct() {
+    return await $api.get(`/product/list`);
   }
 }

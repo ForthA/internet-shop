@@ -7,9 +7,26 @@ const name = ref('');
 const surname = ref('');
 const email = ref('');
 const password = ref('')
+const flagForm = ref(false);
 
 const auth = useAuth();
 
+
+const handleSubmit = async () => {
+  try {
+    await auth.registration({ name: name.value, surname: surname.value, email: email.value, password: password.value })
+    if (auth.errorReg.length === 0) {
+      flagForm.value = true;
+    }
+    name.value = '';
+    surname.value = '';
+    email.value = '';
+    password.value = '';
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
 
 </script>
 
@@ -17,11 +34,13 @@ const auth = useAuth();
   <div class="regForm">
     <div class="regBody">
       <p class="regTitle">Регистрация</p>
-      <input class="regInput" type="text" placeholder="Имя" required v-model="name">
-      <input class="regInput" type="text" placeholder="Фамилия" required v-model="surname">
-      <input class="regInput" type="email" placeholder="Email" required v-model="email">
-      <input class="regInput" type="password" placeholder="Пароль" required v-model="password">
-      <button class="regBtn" @click="auth.registration(name, surname, email, password)">Зарегистрироваться</button>
+      <input class="regInput" type="text" placeholder="Имя" v-model.trim="name">
+      <input class="regInput" type="text" placeholder="Фамилия" v-model.trim="surname">
+      <input class="regInput" type="email" placeholder="Email" v-model.trim="email">
+      <input class="regInput" type="password" placeholder="Пароль" v-model.trim="password">
+      <p v-if="flagForm" style="color: green; margin-bottom: 0.5vw; font-weight: 700;">Вы успешно
+        зарегистрировались!</p>
+      <button class="regBtn" @click="handleSubmit">Зарегистрироваться</button>
       <p class="regToReg">
         Вернутся на
         <router-link to="/войти">
@@ -44,6 +63,7 @@ const auth = useAuth();
   height: 100%;
   display: flex;
   background: #f8f8f8;
+  font-size: 1vw;
 }
 
 .regTitle {
@@ -60,7 +80,7 @@ const auth = useAuth();
   flex-direction: column;
   align-items: center;
   width: 30vw;
-  height: 40vw;
+  height: 42vw;
   margin: auto;
   padding: 2vw;
 }

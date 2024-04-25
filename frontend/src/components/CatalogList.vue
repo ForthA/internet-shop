@@ -32,7 +32,7 @@ import CatalogItem from './CatalogItem.vue';
 }
 
 .catalogList{
-  height: 80vh;
+  min-height: 30vw;
   overflow:hidden;
   overflow-y:scroll;
 }

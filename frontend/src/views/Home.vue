@@ -1,17 +1,18 @@
 <script setup>
 
 import Header from '@/components/Header.vue';
-import { postService } from '@/service/productService';
-
+import ProductList from '@/components/ProductList.vue';
+import { productService } from '@/service/productService';
 import { onMounted, ref, provide } from 'vue';
 
 const catalogList = ref([]);
 const isLoading = ref(true);
 const error = ref(null);
 
+
 async function fetchCatalog() {
   try {
-    const { data } = await postService.getCatalog();
+    const { data } = await productService.getCatalog();
     catalogList.value = data;
     console.log(data);
   }
@@ -37,5 +38,6 @@ onMounted(fetchCatalog)
 <template>
   <main>
     <Header />
+    <ProductList />
   </main>
 </template>
