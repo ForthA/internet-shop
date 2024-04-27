@@ -8,16 +8,16 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class JwtResponseDto {
 
     private final String tokenType = "Bearer";
 
     private String accessToken;
 
-    private Instant accessExpiresIn;
-
     private String refreshToken;
 
-    private Instant refreshExpiresIn;
+    public JwtResponseDto(String accessToken, String refreshToken){
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

@@ -60,17 +60,8 @@ public class AuthController {
     }
     @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")
-    public ResponseEntity<String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
-        try {
-            UserDetails details = personDetailsService.loadUserByUsername(authenticationDTO.getUsername());
-            if (!passwordEncoder.matches(authenticationDTO.getPassword(), details.getPassword())){
-                return new ResponseEntity<>("Неверный пароль", HttpStatus.UNAUTHORIZED);
-            }
-            String token = jwtUtil.generateToken(authenticationDTO.getUsername());
-            return new ResponseEntity<>(token, HttpStatus.OK);
-        } catch (UsernameNotFoundException e){
-            return new ResponseEntity<>("Нет пользователя с таким именем", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
+        return ResponseEntity.ok(registrationService.login(authenticationDTO));
     }
 
     /*

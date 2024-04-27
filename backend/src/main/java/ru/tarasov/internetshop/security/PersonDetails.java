@@ -1,5 +1,7 @@
 package ru.tarasov.internetshop.security;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -55,5 +57,9 @@ public class PersonDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Person getPerson() {
+        return person;
     }
 }

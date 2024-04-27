@@ -37,5 +37,11 @@ public class JWTUtil {
         DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("username").asString();
     }
+/*
+    public String generateRefreshToken(String username){
+        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(3600).toInstant());
 
+    }
+
+ */
 }
