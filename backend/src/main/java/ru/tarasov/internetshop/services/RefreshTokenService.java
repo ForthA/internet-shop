@@ -37,6 +37,8 @@ public class RefreshTokenService {
         refreshToken.setExpiryDay(ZonedDateTime.now().plusMinutes(3600).toInstant());
         refreshToken.setToken(UUID.randomUUID().toString());
 
+        refreshTokenRepository.save(refreshToken);
+
         return refreshToken;
     }
 
@@ -46,6 +48,10 @@ public class RefreshTokenService {
             throw new TokenRefreshException(token.getToken(), "БАХ jwt испарился...");
         }
         return token;
+    }
+
+    public void deleteByToken(String token){
+        refreshTokenRepository.deleteAllPersonTokensByToken(token);
     }
 
     @Transactional

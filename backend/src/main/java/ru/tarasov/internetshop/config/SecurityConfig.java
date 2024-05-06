@@ -65,6 +65,7 @@ public class SecurityConfig {
             authz
                     .requestMatchers("/login/**").permitAll()
                     .requestMatchers("/registration/**").permitAll()
+                    .requestMatchers("/refresh/**").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
                     .requestMatchers("/product/**").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")

@@ -60,18 +60,14 @@ public class RegistrationService {
             if (!passwordEncoder.matches(authenticationDTO.getPassword(), person.get().getPassword())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверный пароль");
             }
-            generateResponse(person.get(), new RefreshToken(person.get()));
+            return generateResponse(person.get());
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с таким именем не найден");
         }
-        return generateResponse(person.get(), new RefreshToken());
     }
 
-    private JwtResponseDto generateResponse(Person person, RefreshToken refreshToken){
-        refreshToken.setToken(refreshToken.getToken());
-        refreshTokenRepository.save(refreshToken);
-
+    private JwtResponseDto generateResponse(Person person){
         return new JwtResponseDto(jwtUtil.generateToken(person.getName()), refreshTokenService.createRefreshToken(person.getId()).getToken());
     }
 
