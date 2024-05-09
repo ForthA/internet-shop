@@ -68,6 +68,8 @@ public class SecurityConfig {
                     .requestMatchers("/refresh/**").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
                     .requestMatchers("/product/**").permitAll()
+                    .requestMatchers("/logout/**").permitAll()
+                    .requestMatchers("/123/**").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers(AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated();

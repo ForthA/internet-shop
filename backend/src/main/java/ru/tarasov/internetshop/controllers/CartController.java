@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/cart")
 public class CartController {
 
-    private CartService cartService;
+    private final CartService cartService;
 
     @Autowired
     public CartController(CartService cartService) {
@@ -24,7 +24,6 @@ public class CartController {
     @Operation(summary = "Все товары в корзине", tags = {"list"})
     @GetMapping("/list")
     public ResponseEntity<List<Cart>> cartPage(){
-
         return new ResponseEntity<>(cartService.findAll(), HttpStatus.OK);
     }
 

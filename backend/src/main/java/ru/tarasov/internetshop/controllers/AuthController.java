@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,24 +27,18 @@ import ru.tarasov.internetshop.services.RegistrationService;
 @RestController
 public class AuthController {
 
-    private final PersonDetailsService personDetailsService;
-
     private final RegistrationService registrationService;
 
     private final ModelMapper modelMapper;
 
     private final JWTUtil jwtUtil;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final RefreshTokenService refreshTokenService;
     @Autowired
-    public AuthController(PersonDetailsService personDetailsService, RegistrationService registrationService, ModelMapper modelMapper, JWTUtil jwtUtil, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService) {
-        this.personDetailsService = personDetailsService;
+    public AuthController(RegistrationService registrationService, ModelMapper modelMapper, JWTUtil jwtUtil, RefreshTokenService refreshTokenService) {
         this.registrationService = registrationService;
         this.modelMapper = modelMapper;
         this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
         this.refreshTokenService = refreshTokenService;
     }
 
@@ -63,11 +58,12 @@ public class AuthController {
     }
     @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
         return ResponseEntity.ok(registrationService.login(authenticationDTO));
     }
 
-
+    @Operation(summary = "Получение токена по рефрештокену", tags = {"token"})
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
         String refreshTokenRequest = request.getRefreshToken();
@@ -82,9 +78,11 @@ public class AuthController {
                 .orElseThrow(() -> new TokenRefreshException(refreshTokenRequest, "Refresh token не в базе"));
     }
 
-    @PostMapping("/logout")
-    public void logout(@RequestBody RefreshTokenRequest request){
+    @Operation(summary = "Логаут со странным адресом и странной работой, на вход рефрештокен", tags = {"logout"})
+    @PostMapping("/123/logout")
+    public ResponseEntity<?> logout(@RequestBody RefreshTokenRequest request){
         refreshTokenService.deleteByToken(request.getRefreshToken());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

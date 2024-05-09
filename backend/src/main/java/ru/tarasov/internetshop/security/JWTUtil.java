@@ -38,12 +38,4 @@ public class JWTUtil {
         return jwt.getClaim("username").asString();
     }
 
-
-/*
-    public String generateRefreshToken(String username){
-        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(3600).toInstant());
-
-    }
-
- */
 }
