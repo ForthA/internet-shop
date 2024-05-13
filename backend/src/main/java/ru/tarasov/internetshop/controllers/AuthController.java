@@ -79,7 +79,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Логаут со странным адресом и странной работой, на вход рефрештокен", tags = {"logout"})
-    @PostMapping("/123/logout")
+    @PostMapping("/my/logout")
     public ResponseEntity<?> logout(@RequestBody RefreshTokenRequest request){
         refreshTokenService.deleteByToken(request.getRefreshToken());
         return new ResponseEntity<>(HttpStatus.OK);

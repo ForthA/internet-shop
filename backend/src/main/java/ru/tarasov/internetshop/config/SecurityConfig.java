@@ -1,5 +1,6 @@
 package ru.tarasov.internetshop.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -62,6 +63,7 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
 
         http.cors().and().csrf().disable();
+        http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests((authz) -> {
             authz
@@ -70,7 +72,7 @@ public class SecurityConfig {
                     .requestMatchers("/refresh/**").permitAll()
                     .requestMatchers("/catalog/**").permitAll()
                     .requestMatchers("/product/**").permitAll()
-                    .requestMatchers("/logout/**").permitAll()
+                    .requestMatchers("/my/logout").permitAll()
                     .requestMatchers("/123/**").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers(AUTH_WHITELIST).permitAll()

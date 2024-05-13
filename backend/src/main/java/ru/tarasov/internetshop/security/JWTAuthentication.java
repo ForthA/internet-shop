@@ -1,5 +1,8 @@
 package ru.tarasov.internetshop.security;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import ru.tarasov.internetshop.models.Role;
@@ -7,6 +10,9 @@ import ru.tarasov.internetshop.models.Role;
 import java.util.Collection;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class JWTAuthentication implements Authentication {
 
     private boolean authenticated;
@@ -30,21 +36,21 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return userId;
     }
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return authenticated;
     }
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+        this.authenticated = isAuthenticated;
     }
 
     @Override
     public String getName() {
-        return null;
+        return String.valueOf(userId);
     }
 }
