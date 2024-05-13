@@ -62,7 +62,7 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
 
         http.cors().and().csrf().disable();
-        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests((authz) -> {
             authz
                     .requestMatchers("/login/**").permitAll()
