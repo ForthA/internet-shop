@@ -42,7 +42,8 @@ public class Person {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "person_roles",
     joinColumns = {@JoinColumn(name = "person_id", referencedColumnName = "id")},
     inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})

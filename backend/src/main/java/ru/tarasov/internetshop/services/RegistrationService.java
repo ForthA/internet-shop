@@ -60,6 +60,7 @@ public class RegistrationService {
             if (!passwordEncoder.matches(authenticationDTO.getPassword(), person.get().getPassword())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверный пароль");
             }
+            refreshTokenService.deleteByPersonId(person.get().getId());
             return generateResponse(person.get());
         }
         else {

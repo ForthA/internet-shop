@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    @Value("${jwt_secret}")
+    @Value("SECRET")
     private String secret;
 
     public String generateToken(String username){
@@ -35,7 +35,9 @@ public class JWTUtil {
                 .withIssuer("tarasov")
                 .build();
         DecodedJWT jwt = verifier.verify(token);
-        return jwt.getClaim("username").asString();
+        String name = jwt.getClaim("username").asString();
+        System.out.println(name);
+        return name;
     }
 
 }
