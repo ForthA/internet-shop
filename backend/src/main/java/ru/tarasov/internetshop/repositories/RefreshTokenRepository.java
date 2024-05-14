@@ -15,7 +15,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
 
     @Query(value = """
         delete from refresh_token
-        where user_id = (select user_id from refresh_token where token = ?1)
+        where user_id in (select user_id from refresh_token where token = ?1)
         """, nativeQuery = true)
     void deleteAllPersonTokensByToken(String token);
 

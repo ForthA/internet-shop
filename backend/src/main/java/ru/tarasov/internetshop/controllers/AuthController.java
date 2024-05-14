@@ -44,21 +44,18 @@ public class AuthController {
 
     @Operation(summary = "Регистрация пользователя", tags = {"add"})
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody PersonDTO personDTO, BindingResult bindingResult){
+    public ResponseEntity<?> registration(@RequestBody PersonDTO personDTO, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.NOT_FOUND);
 
         try {
-            registrationService.register(converToPerson(personDTO));
-            String token = jwtUtil.generateToken(personDTO.getName());
-            return new ResponseEntity<>(token, HttpStatus.OK);
+            return new ResponseEntity<>(registrationService.register(converToPerson(personDTO)), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>("Ошибка при регистрации", HttpStatus.BAD_REQUEST);
         }
     }
     @Operation(summary = "Аутентификация пользователя", tags = {"login"})
     @PostMapping("/login")
-    //@PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
         return ResponseEntity.ok(registrationService.login(authenticationDTO));
     }

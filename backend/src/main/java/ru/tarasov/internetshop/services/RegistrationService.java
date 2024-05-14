@@ -48,10 +48,11 @@ public class RegistrationService {
         this.refreshTokenService = refreshTokenService;
     }
     @Transactional
-    public void register(Person person){
+    public JwtResponseDto register(Person person){
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         person.setRoles(Set.of(roleRepository.findByRoleName("USER").get()));
         personRepository.save(person);
+        return generateResponse(person);
     }
 
     public JwtResponseDto login(AuthenticationDTO authenticationDTO){
