@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.tarasov.internetshop.models.Cart;
+import ru.tarasov.internetshop.requests.CartAddRequest;
 import ru.tarasov.internetshop.security.JWTAuthentication;
 import ru.tarasov.internetshop.services.CartService;
 
@@ -32,14 +33,17 @@ public class CartController {
 
     @Operation(summary = "Добавить товар к корзине", tags = {"add"})
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> saveCart(@RequestBody Cart cart){
+    public ResponseEntity<HttpStatus> saveCart(@RequestBody CartAddRequest cartAddRequest,
+                                               UsernamePasswordAuthenticationToken auth){
         try {
-            cartService.saveCart(cart);
+            cartService.saveCart(cartAddRequest.getId(), auth.getName());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //public ResponseEntity<HttpStatus> addAmount()
 
     @Operation(summary = "Удалить товар из корзины", tags = {"delete"})
     @DeleteMapping("/delete/{id}")

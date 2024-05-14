@@ -15,10 +15,13 @@ public class CartService {
 
     private final PersonService personService;
 
+    private final ProductService productService;
+
     @Autowired
-    public CartService(CartRepository cartRepository, PersonService personService) {
+    public CartService(CartRepository cartRepository, PersonService personService, ProductService productService) {
         this.cartRepository = cartRepository;
         this.personService = personService;
+        this.productService = productService;
     }
 
     public List<Cart> findByPersonId(int userId){
@@ -37,7 +40,13 @@ public class CartService {
         return cartRepository.findAll();
     }
 
-    public void saveCart(Cart cart){
+    public void saveCart(int productId, String username){
+        Person person = personService.loadUserByUsername(username).get();
+
+        Cart cart = new Cart();
+        cart.setPerson(person);
+        cart.setAmount(1);
+        cart.setProduct(productService.findProductById(productId));
         cartRepository.save(cart);
     }
 

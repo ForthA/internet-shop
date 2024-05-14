@@ -19,16 +19,12 @@ public class Cart {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "product_id")
-    @JsonIgnore
-    private int product_id;
-
     @Column(name = "amount")
     private int amount;
 
-    @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "product_id")
-    private List<Product> product;
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @OneToOne
     @JsonIgnore
