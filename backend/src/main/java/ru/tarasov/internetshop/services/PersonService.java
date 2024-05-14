@@ -17,6 +17,10 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
+    public Optional<Person> findPersonById(int id){
+        return personRepository.findById(id);
+    }
+
     public void save(Person person){
         personRepository.save(person);
     }

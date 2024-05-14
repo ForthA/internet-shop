@@ -29,4 +29,9 @@ public class Cart {
     @OneToMany
     @JoinColumn(name = "id", referencedColumnName = "product_id")
     private List<Product> product;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
 }

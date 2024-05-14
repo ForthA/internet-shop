@@ -5,9 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import ru.tarasov.internetshop.models.Role;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -16,12 +19,17 @@ import java.util.Set;
 public class JWTAuthentication implements Authentication {
 
     private boolean authenticated;
-    private Long userId;
     private Set<Role> roles;
+    private String name;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> my_roles = new ArrayList<>();
+
+        roles.forEach(role -> {
+            my_roles.add(new SimpleGrantedAuthority(role.getRoleName()));
+        });
+        return my_roles;
     }
 
     @Override
@@ -36,7 +44,7 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return userId;
+        return name;
     }
 
     @Override
@@ -51,6 +59,6 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return String.valueOf(userId);
+        return name;
     }
 }

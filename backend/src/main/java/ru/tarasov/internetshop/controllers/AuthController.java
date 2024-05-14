@@ -75,7 +75,7 @@ public class AuthController {
                 .orElseThrow(() -> new TokenRefreshException(refreshTokenRequest, "Refresh token не в базе"));
     }
 
-    @Operation(summary = "Логаут со странным адресом и странной работой, на вход рефрештокен", tags = {"logout"})
+    @Operation(summary = "Логаут с ебанутым адресом и странной работой, на вход рефрештокен", tags = {"logout"})
     @PostMapping("/my/logout")
     public ResponseEntity<?> logout(@RequestBody RefreshTokenRequest request){
         refreshTokenService.deleteByToken(request.getRefreshToken());

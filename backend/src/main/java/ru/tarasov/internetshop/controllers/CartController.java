@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.tarasov.internetshop.models.Cart;
+import ru.tarasov.internetshop.security.JWTAuthentication;
 import ru.tarasov.internetshop.services.CartService;
 
 import java.util.List;
@@ -22,10 +24,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @Operation(summary = "Все товары в корзине", tags = {"list"})
+    @Operation(summary = "Все товары в корзине у конкретного пользователя", tags = {"list"})
     @GetMapping("/list")
-    public ResponseEntity<List<Cart>> cartPage(){
-        return new ResponseEntity<>(cartService.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> cartPage(UsernamePasswordAuthenticationToken auth){
+        return new ResponseEntity<>(cartService.findByPersonName(auth.getName()), HttpStatus.OK);
     }
 
     @Operation(summary = "Добавить товар к корзине", tags = {"add"})
