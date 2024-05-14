@@ -1,9 +1,13 @@
 package ru.tarasov.internetshop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.tarasov.internetshop.models.Cart;
 import ru.tarasov.internetshop.models.Person;
+import ru.tarasov.internetshop.models.Product;
 import ru.tarasov.internetshop.repositories.CartRepository;
 
 import java.util.List;
@@ -48,6 +52,22 @@ public class CartService {
         cart.setAmount(1);
         cart.setProduct(productService.findProductById(productId));
         cartRepository.save(cart);
+    }
+
+    @Transactional
+    public void addAmountCart(int productId, String username){
+        Person person = personService.loadUserByUsername(username).get();
+        Product product = productService.findProductById(productId);
+
+        Cart cart = cartRepository.findCartByProductAndPerson(product, person).get();
+        if (product.getAmount() < cart.getAmount() + 1){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Превышено количество товара на складе");
+        }
+        else {
+            cart.setAmount(cart.getAmount() + 1);
+
+            cartRepository.save(cart);
+        }
     }
 
     public void deleteCart(int id){
