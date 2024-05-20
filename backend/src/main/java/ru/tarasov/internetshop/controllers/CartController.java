@@ -53,7 +53,7 @@ public class CartController {
         }
     }
 
-    @Operation(summary = "Уменьшите количество товара в корзине")
+    @Operation(summary = "Уменьшите количество товара в корзине", tags = {"delete"})
     @PatchMapping("/decreaseAmount")
     public ResponseEntity<HttpStatus> decreaseAmount(@RequestBody CartAmountRequest cartAmountRequest,
                                                      UsernamePasswordAuthenticationToken auth) {
@@ -77,4 +77,28 @@ public class CartController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(summary = "Получить стоимость заказа", tags = {"get"})
+    @GetMapping("/cart_price")
+    public ResponseEntity<?> cartPrice(UsernamePasswordAuthenticationToken auth){
+
+        try {
+            return ResponseEntity.ok(cartService.getPriceCart(auth.getName()));
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Operation(summary = "Оформить заказ", tags = "form")
+    @PatchMapping("/form_order")
+    public ResponseEntity<HttpStatus> formOrder(UsernamePasswordAuthenticationToken auth){
+        try {
+            cartService.formOrder(auth.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

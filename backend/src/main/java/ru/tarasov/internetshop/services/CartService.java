@@ -9,6 +9,7 @@ import ru.tarasov.internetshop.models.Cart;
 import ru.tarasov.internetshop.models.Person;
 import ru.tarasov.internetshop.models.Product;
 import ru.tarasov.internetshop.repositories.CartRepository;
+import ru.tarasov.internetshop.responses.CartPriceResponse;
 
 import java.util.List;
 
@@ -71,6 +72,21 @@ public class CartService {
     }
 
     @Transactional
+    public void formOrder(String username){
+        Person person = personService.loadUserByUsername(username).get();
+
+        List<Cart> carts = cartRepository.findAllByPerson(person);
+
+        if (carts.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Корзина пуста");
+        }
+
+        for (Cart cart : carts){
+            productService.decreaseProductAmount(cart.getProduct(), cart.getAmount());
+        }
+    }
+
+    @Transactional
     public void decreaseAmountCart(int productId, String username){
         Person person = personService.loadUserByUsername(username).get();
         Product product = productService.findProductById(productId);
@@ -87,10 +103,34 @@ public class CartService {
 
             cartRepository.save(cart);
         }
+    }
 
+    public CartPriceResponse getPriceCart(String username){
+        Person person = personService.loadUserByUsername(username).get();
+
+        List<Cart> carts = findByPersonName(username);
+
+        int price = 0;
+
+        if (carts.isEmpty()){
+            return formCartPriceResponse(price);
+        }
+
+        for (Cart cart : carts){
+            price += cart.getProduct().getPrice();
+        }
+
+        return formCartPriceResponse(price);
     }
 
     public void deleteCart(int id){
         cartRepository.deleteById(id);
     }
+
+    private CartPriceResponse formCartPriceResponse(int price){
+        CartPriceResponse cartPriceResponse = new CartPriceResponse();
+        cartPriceResponse.setPrice(price);
+        return cartPriceResponse;
+    }
+
 }
