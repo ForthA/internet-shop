@@ -70,6 +70,26 @@ public class CartService {
         }
     }
 
+    @Transactional
+    public void decreaseAmountCart(int productId, String username){
+        Person person = personService.loadUserByUsername(username).get();
+        Product product = productService.findProductById(productId);
+
+        Cart cart = cartRepository.findCartByProductAndPerson(product, person).get();
+        if (cart.getAmount() - 1 < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Нельзя задать отрицательно количество товара");
+        }
+        else if (cart.getAmount() - 1 == 0) {
+            cartRepository.deleteById(cart.getId());
+        }
+        else {
+            cart.setAmount(cart.getAmount() - 1);
+
+            cartRepository.save(cart);
+        }
+
+    }
+
     public void deleteCart(int id){
         cartRepository.deleteById(id);
     }

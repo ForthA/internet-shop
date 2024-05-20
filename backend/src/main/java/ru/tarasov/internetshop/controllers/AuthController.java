@@ -5,10 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +17,6 @@ import ru.tarasov.internetshop.models.Person;
 import ru.tarasov.internetshop.models.RefreshToken;
 import ru.tarasov.internetshop.models.RefreshTokenRequest;
 import ru.tarasov.internetshop.security.JWTUtil;
-import ru.tarasov.internetshop.services.PersonDetailsService;
 import ru.tarasov.internetshop.services.RefreshTokenService;
 import ru.tarasov.internetshop.services.RegistrationService;
 

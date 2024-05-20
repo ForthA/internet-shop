@@ -36,7 +36,6 @@ public class JWTUtil {
                 .build();
         DecodedJWT jwt = verifier.verify(token);
         String name = jwt.getClaim("username").asString();
-        System.out.println(name);
         return name;
     }
 

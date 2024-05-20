@@ -1,19 +1,16 @@
 package ru.tarasov.internetshop.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.tarasov.internetshop.models.Cart;
 import ru.tarasov.internetshop.requests.CartAddRequest;
 import ru.tarasov.internetshop.requests.CartAmountRequest;
-import ru.tarasov.internetshop.security.JWTAuthentication;
+import ru.tarasov.internetshop.requests.CartDeleteRequest;
 import ru.tarasov.internetshop.services.CartService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -44,6 +41,7 @@ public class CartController {
         }
     }
 
+    @Operation(summary = "Увеличить количество товара в корзине", tags = {"add"})
     @PatchMapping("/addAmount")
     public ResponseEntity<HttpStatus> addAmount(@RequestBody CartAmountRequest cartAmountRequest,
                                                 UsernamePasswordAuthenticationToken auth) {
@@ -55,11 +53,25 @@ public class CartController {
         }
     }
 
+    @Operation(summary = "Уменьшите количество товара в корзине")
+    @PatchMapping("/decreaseAmount")
+    public ResponseEntity<HttpStatus> decreaseAmount(@RequestBody CartAmountRequest cartAmountRequest,
+                                                     UsernamePasswordAuthenticationToken auth) {
+        try{
+            cartService.decreaseAmountCart(cartAmountRequest.getId(), auth.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     @Operation(summary = "Удалить товар из корзины", tags = {"delete"})
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteCart(@PathVariable int id){
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteCart(@RequestBody CartDeleteRequest cartDeleteRequest,
+                                                 UsernamePasswordAuthenticationToken auth){
         try {
-            cartService.deleteCart(id);
+            cartService.deleteCart(cartDeleteRequest.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
