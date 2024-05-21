@@ -83,6 +83,7 @@ public class CartService {
 
         for (Cart cart : carts){
             productService.decreaseProductAmount(cart.getProduct(), cart.getAmount());
+            cartRepository.delete(cart);
         }
     }
 

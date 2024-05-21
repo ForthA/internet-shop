@@ -34,12 +34,8 @@ public class EmailController {
     @Operation(summary = "Отправить сообщение на mail пользователя", tags = {"send"})
     @PostMapping("/send_mail")
     public ResponseEntity<HttpStatus> sendEmail(UsernamePasswordAuthenticationToken auth){
-        try {
-            emailService.sendMail(personService.loadUserByUsername(auth.getName()).get());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        emailService.sendMail(personService.loadUserByUsername(auth.getName()).get());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
