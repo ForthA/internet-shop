@@ -78,6 +78,7 @@ public class SecurityConfig {
                     .anyRequest().authenticated();
 
         });
+        http.anonymous().disable();
         http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
