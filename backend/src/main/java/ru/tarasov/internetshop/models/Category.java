@@ -7,15 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLSelect;
+import org.springframework.context.annotation.Primary;
 
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category",
+        indexes = {@Index(name = "first_index", columnList = "father_id", unique = false)})
 @NoArgsConstructor
 @Getter
 @Setter
 public class Category {
+
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,17 +27,16 @@ public class Category {
     @Column(name="title")
     private String title;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "father_id", referencedColumnName = "id")
-    private Category fatherCategory;
-
-    @OneToMany
-    @JoinColumn(name = "father_id")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(unique = false, name = "father_id")
     private List<Category> subCategories;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = false, name = "father_id", referencedColumnName = "id")
+    private Category fatherCategory;
 
     @OneToMany(mappedBy = "categoryId")
     private List<Product> products;
-
 
 }

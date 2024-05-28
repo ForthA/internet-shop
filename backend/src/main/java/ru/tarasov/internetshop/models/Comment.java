@@ -1,33 +1,33 @@
 package ru.tarasov.internetshop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
-@Entity
-@Table(name = "cart")
-@NoArgsConstructor
 @Getter
 @Setter
-public class Cart {
+@NoArgsConstructor
+@Entity
+@Table(name = "comment")
+public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "amount")
-    private int amount;
+    @Column(name = "rating")
+    private double rating;
 
-    @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    @Column(name = "commentary")
+    private String commentary;
+
+    @Column(name = "image")
+    private String imagePath;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
+
 }
