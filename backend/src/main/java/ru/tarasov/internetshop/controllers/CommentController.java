@@ -27,11 +27,13 @@ public class CommentController {
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<?> addComment(@RequestParam("rating") double rating,
                                         @RequestParam("commentary") String commentary,
+                                        @RequestParam("product_id") int productId,
                                         @RequestParam("image") MultipartFile multipartFile,
                                         UsernamePasswordAuthenticationToken auth){
 
         String fileName = multipartFile.getOriginalFilename();
         CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setProductId(productId);
         commentDTO.setCommentary(commentary);
         commentDTO.setRating(rating);
         logger.info(fileName);

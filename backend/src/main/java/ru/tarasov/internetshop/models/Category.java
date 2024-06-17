@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.SQLSelect;
-import org.springframework.context.annotation.Primary;
 
 import java.util.List;
 

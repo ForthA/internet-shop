@@ -19,12 +19,10 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService){
+    public ProductController(ProductService productService){
         this.productService = productService;
-        this.categoryService = categoryService;
     }
 
     @Operation(summary = "Все продукты", tags = {"list"})

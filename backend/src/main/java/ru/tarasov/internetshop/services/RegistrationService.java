@@ -9,9 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.tarasov.internetshop.dto.AuthenticationDTO;
 import ru.tarasov.internetshop.dto.JwtResponseDto;
 import ru.tarasov.internetshop.models.Person;
-import ru.tarasov.internetshop.models.RefreshToken;
 import ru.tarasov.internetshop.repositories.PersonRepository;
-import ru.tarasov.internetshop.repositories.RefreshTokenRepository;
 import ru.tarasov.internetshop.repositories.RoleRepository;
 import ru.tarasov.internetshop.security.JWTUtil;
 
@@ -28,29 +26,25 @@ public class RegistrationService {
 
     private final PersonService personService;
 
-    private final PersonDetailsService personDetailsService;
-
-    private final RefreshTokenRepository refreshTokenRepository;
-
     private final JWTUtil jwtUtil;
 
     private final RefreshTokenService refreshTokenService;
 
     @Autowired
-    public RegistrationService(PersonRepository personRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PersonService personService, PersonDetailsService personDetailsService, RefreshTokenRepository refreshTokenRepository, JWTUtil jwtUtil, RefreshTokenService refreshTokenService) {
+    public RegistrationService(PersonRepository personRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PersonService personService, JWTUtil jwtUtil, RefreshTokenService refreshTokenService) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.personService = personService;
-        this.personDetailsService = personDetailsService;
-        this.refreshTokenRepository = refreshTokenRepository;
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshTokenService;
     }
     @Transactional
     public JwtResponseDto register(Person person){
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        person.setRoles(Set.of(roleRepository.findByRoleName("USER").get()));
+        person.setRoles(Set.of(roleRepository.findByRoleName("USER").orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При регистрации роль не была найдена")
+        )));
         personRepository.save(person);
         return generateResponse(person);
     }

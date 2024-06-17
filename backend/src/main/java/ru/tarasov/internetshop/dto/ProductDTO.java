@@ -1,9 +1,5 @@
 package ru.tarasov.internetshop.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
 
 public class ProductDTO {
     private String title;

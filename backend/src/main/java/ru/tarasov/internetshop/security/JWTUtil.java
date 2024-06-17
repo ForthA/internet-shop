@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    @Value("SECRET")
+    @Value("${jwt_secret}")
     private String secret;
 
     public String generateToken(String username){
@@ -24,7 +24,7 @@ public class JWTUtil {
                 .withSubject("User details")
                 .withClaim("username", username)
                 .withIssuedAt(new Date())
-                .withIssuer("tarasov")   //В реальных приложухах тут название проги
+                .withIssuer("tarasov")
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secret));
     }

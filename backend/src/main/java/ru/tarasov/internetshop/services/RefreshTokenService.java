@@ -1,9 +1,10 @@
 package ru.tarasov.internetshop.services;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.tarasov.internetshop.exceptions.TokenRefreshException;
 import ru.tarasov.internetshop.models.RefreshToken;
 import ru.tarasov.internetshop.repositories.PersonRepository;
@@ -33,7 +34,9 @@ public class RefreshTokenService {
     public RefreshToken createRefreshToken(int userId){
         RefreshToken refreshToken = new RefreshToken();
 
-        refreshToken.setPerson(personRepository.findById(userId).get());
+        refreshToken.setPerson(personRepository.findById(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При создании рефреш токена пользователь не был найден")
+        ));
         refreshToken.setExpiryDay(ZonedDateTime.now().plusMinutes(3600).toInstant());
         refreshToken.setToken(UUID.randomUUID().toString());
 
@@ -45,7 +48,7 @@ public class RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token){
         if (token.getExpiryDay().compareTo(Instant.now()) < 0){
             refreshTokenRepository.delete(token);
-            throw new TokenRefreshException(token.getToken(), "БАХ jwt испарился...");
+            throw new TokenRefreshException(token.getToken(), "Время действия jwt токена истекло");
         }
         return token;
     }
@@ -56,6 +59,8 @@ public class RefreshTokenService {
 
     @Transactional
     public int deleteByPersonId(int userId){
-        return refreshTokenRepository.deleteByPerson(personRepository.findById(userId).get());
+        return refreshTokenRepository.deleteByPerson(personRepository.findById(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При удалении рефреш токена пользователь не был найден")
+        ));
     }
 }

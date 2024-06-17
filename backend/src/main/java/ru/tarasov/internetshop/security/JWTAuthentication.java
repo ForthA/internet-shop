@@ -24,12 +24,10 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> my_roles = new ArrayList<>();
+        List<GrantedAuthority> myRoles = new ArrayList<>();
 
-        roles.forEach(role -> {
-            my_roles.add(new SimpleGrantedAuthority(role.getRoleName()));
-        });
-        return my_roles;
+        roles.forEach(role -> myRoles.add(new SimpleGrantedAuthority(role.getRoleName())));
+        return myRoles;
     }
 
     @Override
@@ -55,10 +53,5 @@ public class JWTAuthentication implements Authentication {
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         this.authenticated = isAuthenticated;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }

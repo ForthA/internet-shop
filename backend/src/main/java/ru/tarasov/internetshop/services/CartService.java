@@ -30,13 +30,17 @@ public class CartService {
     }
 
     public List<Cart> findByPersonId(int userId){
-        Person person = personService.findPersonById(userId).get();
+        Person person = personService.findPersonById(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь на найден")
+        );
 
         return cartRepository.findAllByPerson(person);
     }
 
     public List<Cart> findByPersonName(String name){
-        Person person = personService.loadUserByUsername(name).get();
+        Person person = personService.loadUserByUsername(name).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь не найден")
+        );
 
         return cartRepository.findAllByPerson(person);
     }
@@ -46,7 +50,9 @@ public class CartService {
     }
 
     public void saveCart(int productId, String username){
-        Person person = personService.loadUserByUsername(username).get();
+        Person person = personService.loadUserByUsername(username).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При сохранении в корзину пользователь не найден")
+        );
 
         Cart cart = new Cart();
         cart.setPerson(person);
@@ -57,10 +63,14 @@ public class CartService {
 
     @Transactional
     public void addAmountCart(int productId, String username){
-        Person person = personService.loadUserByUsername(username).get();
+        Person person = personService.loadUserByUsername(username).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При увеличении количества товара пользователь не был найден")
+        );
         Product product = productService.findProductById(productId);
 
-        Cart cart = cartRepository.findCartByProductAndPerson(product, person).get();
+        Cart cart = cartRepository.findCartByProductAndPerson(product, person).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Корзина не найдена")
+        );
         if (product.getAmount() < cart.getAmount() + 1){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Превышено количество товара на складе");
         }
@@ -73,7 +83,9 @@ public class CartService {
 
     @Transactional
     public void formOrder(String username){
-        Person person = personService.loadUserByUsername(username).get();
+        Person person = personService.loadUserByUsername(username).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При формировании заказа пользователь не был найден")
+        );
 
         List<Cart> carts = cartRepository.findAllByPerson(person);
 
@@ -89,10 +101,14 @@ public class CartService {
 
     @Transactional
     public void decreaseAmountCart(int productId, String username){
-        Person person = personService.loadUserByUsername(username).get();
+        Person person = personService.loadUserByUsername(username).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "При уменьшении количества товара пользователь не был найден")
+        );
         Product product = productService.findProductById(productId);
 
-        Cart cart = cartRepository.findCartByProductAndPerson(product, person).get();
+        Cart cart = cartRepository.findCartByProductAndPerson(product, person).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Корзина не найдена")
+        );
         if (cart.getAmount() - 1 < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Нельзя задать отрицательно количество товара");
         }
@@ -107,7 +123,6 @@ public class CartService {
     }
 
     public CartPriceResponse getPriceCart(String username){
-        Person person = personService.loadUserByUsername(username).get();
 
         List<Cart> carts = findByPersonName(username);
 

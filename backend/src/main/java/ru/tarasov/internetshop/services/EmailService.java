@@ -12,14 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.tarasov.internetshop.models.Cart;
 import ru.tarasov.internetshop.models.EmailDetails;
 import ru.tarasov.internetshop.models.Person;
-import ru.tarasov.internetshop.models.Product;
 
 import java.util.List;
 
 @Service
 public class EmailService {
 
-    Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     private final JavaMailSender javaMailSender;
 
@@ -48,7 +46,7 @@ public class EmailService {
         }
 
         catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Письмо не было отправлено");
         }
     }
 

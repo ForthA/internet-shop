@@ -1,7 +1,6 @@
 package ru.tarasov.internetshop.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +24,10 @@ public class Comment {
 
     @Column(name = "image")
     private String imagePath;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
